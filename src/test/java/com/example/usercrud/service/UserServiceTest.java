@@ -84,6 +84,15 @@ class UserServiceTest {
     }
 
     @Test
+    void updateNonexistent() {
+        when(dao.findById(1L)).thenReturn(Optional.empty());
+
+        assertTrue(userService.update(1L, null).isEmpty());
+
+        verify(dao, never()).update(any());
+    }
+
+    @Test
     void delete() {
         Long id = 1L;
 
@@ -94,5 +103,13 @@ class UserServiceTest {
         userService.delete(id);
 
         verify(dao, times(1)).delete(mockUser);
+    }
+
+    @Test
+    void deleteNonexistent() {
+        when(dao.findById(1L)).thenReturn(Optional.empty());
+
+        assertTrue(userService.delete(1L).isEmpty());
+        verify(dao, never()).delete(any());
     }
 }
