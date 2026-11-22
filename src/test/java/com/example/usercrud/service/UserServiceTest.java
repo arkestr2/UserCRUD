@@ -78,6 +78,11 @@ class UserServiceTest {
 
         verify(dao, times(1)).findById(id);
         verify(dao, times(1)).update(mockUser);
+
+        verify(mockUser).setName("updated_name");
+        verify(mockUser, never()).setEmail(any());
+        verify(mockUser, never()).setAge(anyInt());
+
         assertTrue(user.isPresent());
         assertEquals(mockUpdatedUser, user.get());
         assertEquals(mockUpdatedUser.getName(), user.get().getName());
