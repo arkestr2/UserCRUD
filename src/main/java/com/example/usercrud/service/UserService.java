@@ -80,7 +80,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto delete(Long id) {
+    public void delete(Long id) {
         log.info("Deleting user with ID: {}", id);
 
         User userToDelete = userRepository.findById(id)
