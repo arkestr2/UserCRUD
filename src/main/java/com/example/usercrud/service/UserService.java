@@ -61,16 +61,16 @@ public class UserService {
 
         String name = userUpdates.name();
         String email = userUpdates.email();
-        int age = userUpdates.age();
+        Integer age = userUpdates.age();
 
-        if (name == null && email == null && age == 0)
+        if (name == null && email == null && age == null)
             throw new IllegalArgumentException("User updates cannot be empty");
 
         if (name != null)
             userToUpdate.setName(name);
         if (email != null)
             userToUpdate.setEmail(email);
-        if (age != 0)
+        if (age != null)
             userToUpdate.setAge(age);
 
         User updatedUser = userRepository.save(userToUpdate);
@@ -88,7 +88,5 @@ public class UserService {
 
         userRepository.delete(userToDelete);
         log.info("Deleted user with ID: {}", id);
-
-        return MappingUtil.toDto(userToDelete);
     }
 }
