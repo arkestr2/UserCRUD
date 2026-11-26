@@ -2,9 +2,12 @@ package com.example.usercrud.service;
 
 import com.example.usercrud.dto.UserRequestDto;
 import com.example.usercrud.dto.UserResponseDto;
+import com.example.usercrud.exception.UserEmptyUpdateException;
+import com.example.usercrud.exception.UserNotFoundException;
 import com.example.usercrud.model.User;
 import com.example.usercrud.repository.UserRepository;
 import com.example.usercrud.util.MappingUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,7 +42,7 @@ public class UserService {
         log.info("Searching user by ID: {}", id);
 
         User found = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found by ID: " + id));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         log.info("User found by ID: {}", id);
 
@@ -53,18 +56,18 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto update(Long id, UserRequestDto userUpdates) {
+    public UserResponseDto update(Long id, UserRequestDto userUpdate) {
         log.info("Updating user with ID: {}", id);
 
         User userToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found by ID: " + id));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
-        String name = userUpdates.name();
-        String email = userUpdates.email();
-        Integer age = userUpdates.age();
+        String name = userUpdate.name();
+        String email = userUpdate.email();
+        Integer age = userUpdate.age();
 
         if (name == null && email == null && age == null)
-            throw new IllegalArgumentException("User updates cannot be empty");
+            throw new UserEmptyUpdateException();
 
         if (name != null)
             userToUpdate.setName(name);
@@ -84,7 +87,7 @@ public class UserService {
         log.info("Deleting user with ID: {}", id);
 
         User userToDelete = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found by ID: " + id));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         userRepository.delete(userToDelete);
         log.info("Deleted user with ID: {}", id);
