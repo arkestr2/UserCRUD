@@ -2,6 +2,7 @@ package com.example.usercrud.service;
 
 import com.example.usercrud.dto.UserRequestDto;
 import com.example.usercrud.dto.UserResponseDto;
+import com.example.usercrud.exception.UserNotFoundException;
 import com.example.usercrud.model.User;
 
 import com.example.usercrud.repository.UserRepository;
@@ -80,6 +81,7 @@ class UserServiceTest {
 
         UserRequestDto mockUserUpdates = mock(UserRequestDto.class);
         when(mockUserUpdates.name()).thenReturn(updatedName);
+        when(mockUserUpdates.age()).thenReturn(null);
 
         User mockUpdatedUser = mock(User.class);
         when(mockUpdatedUser.getName()).thenReturn(updatedName);
@@ -103,7 +105,7 @@ class UserServiceTest {
     void updateNonexistent() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> userService.update(1L, null));
+        assertThrows(UserNotFoundException.class, () -> userService.update(1L, null));
 
         verify(userRepository, never()).save(any());
     }
@@ -125,7 +127,7 @@ class UserServiceTest {
     void deleteNonexistent() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class,  () -> userService.delete(1L));
+        assertThrows(UserNotFoundException.class,  () -> userService.delete(1L));
         verify(userRepository, never()).delete(any());
     }
 }
