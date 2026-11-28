@@ -3,7 +3,7 @@ package com.example.usercrud.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -13,29 +13,41 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(Exception e) {
+    public ProblemDetail handleGenericException(Exception e) {
         log.error("Handle exception", e);
 
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(e.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage()
+        );
+        problem.setTitle("Internal Server Error");
+
+        return problem;
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFound(UserNotFoundException e) {
+    public ProblemDetail handleUserNotFound(UserNotFoundException e) {
         log.error("Handle UserNotFoundException", e);
 
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(e.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                e.getMessage()
+        );
+        problem.setTitle("User Not Found");
+
+        return problem;
     }
 
     @ExceptionHandler(UserEmptyUpdateException.class)
-    public ResponseEntity<String> handleUserEmptyUpdate(UserEmptyUpdateException e) {
+    public ProblemDetail handleUserEmptyUpdate(UserEmptyUpdateException e) {
         log.error("Handle UserEmptyUpdateException", e);
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                e.getMessage()
+        );
+        problem.setTitle("Bad Request");
+
+        return problem;
     }
 }
