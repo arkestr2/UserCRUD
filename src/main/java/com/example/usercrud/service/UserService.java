@@ -2,7 +2,6 @@ package com.example.usercrud.service;
 
 import com.example.usercrud.dto.UserRequestDto;
 import com.example.usercrud.dto.UserResponseDto;
-import com.example.usercrud.exception.UserEmptyUpdateException;
 import com.example.usercrud.exception.UserNotFoundException;
 import com.example.usercrud.model.User;
 import com.example.usercrud.repository.UserRepository;
@@ -62,19 +61,9 @@ public class UserService {
         User userToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        String name = userUpdate.name();
-        String email = userUpdate.email();
-        Integer age = userUpdate.age();
-
-        if (name == null && email == null && age == null)
-            throw new UserEmptyUpdateException();
-
-        if (name != null)
-            userToUpdate.setName(name);
-        if (email != null)
-            userToUpdate.setEmail(email);
-        if (age != null)
-            userToUpdate.setAge(age);
+        userToUpdate.setName(userUpdate.name());
+        userToUpdate.setEmail(userUpdate.email());
+        userToUpdate.setAge(userUpdate.age());
 
         User updatedUser = userRepository.save(userToUpdate);
         log.info("Updated user with ID: {}", id);

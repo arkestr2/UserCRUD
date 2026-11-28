@@ -31,10 +31,11 @@ class UserServiceTest {
 
     @Test
     void save() {
-        UserRequestDto mockUserRequestDto = mock(UserRequestDto.class);
-        when(mockUserRequestDto.name()).thenReturn("test");
-        when(mockUserRequestDto.email()).thenReturn("test@email.com");
-        when(mockUserRequestDto.age()).thenReturn(30);
+        UserRequestDto userRequestDto = new UserRequestDto(
+                "test",
+                "test@email.com",
+                30
+        );
 
         User mockUser = mock(User.class);
         when(mockUser.getId()).thenReturn(1L);
@@ -44,7 +45,7 @@ class UserServiceTest {
         when(mockUser.getCreatedAt()).thenReturn(mock(Instant.class));
 
         when(userRepository.save(any())).thenReturn(mockUser);
-        userService.save(mockUserRequestDto);
+        userService.save(userRequestDto);
 
         verify(userRepository, times(1)).save(any(User.class));
     }
@@ -75,28 +76,28 @@ class UserServiceTest {
     @Test
     void update() {
         Long id = 1L;
-        String updatedName = "updated_name";
+
+        UserRequestDto userUpdate = new UserRequestDto(
+                "updated_name",
+                "updated@mail.com",
+                30
+        );
 
         User mockUser = mock(User.class);
-
-        UserRequestDto mockUserUpdates = mock(UserRequestDto.class);
-        when(mockUserUpdates.name()).thenReturn(updatedName);
-        when(mockUserUpdates.age()).thenReturn(null);
-
         User mockUpdatedUser = mock(User.class);
-        when(mockUpdatedUser.getName()).thenReturn(updatedName);
+        when(mockUpdatedUser.getId()).thenReturn(1L);
 
         when(userRepository.findById(id)).thenReturn(Optional.of(mockUser));
         when(userRepository.save(mockUser)).thenReturn(mockUpdatedUser);
 
-        UserResponseDto userResponseDto = userService.update(id, mockUserUpdates);
+        UserResponseDto userResponseDto = userService.update(id, userUpdate);
 
         verify(userRepository, times(1)).findById(id);
         verify(userRepository, times(1)).save(mockUser);
 
         verify(mockUser).setName("updated_name");
-        verify(mockUser, never()).setEmail(any());
-        verify(mockUser, never()).setAge(anyInt());
+        verify(mockUser).setEmail("updated@mail.com");
+        verify(mockUser).setAge(30);
 
         assertEquals(mockUpdatedUser.getId(), userResponseDto.id());
     }
