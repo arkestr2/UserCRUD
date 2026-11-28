@@ -4,6 +4,7 @@ import com.example.usercrud.dto.UserRequestDto;
 import com.example.usercrud.dto.UserResponseDto;
 import com.example.usercrud.service.UserService;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +20,17 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserResponseDto> save(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> save(
+            @RequestBody @Valid UserRequestDto userRequestDto
+    ) {
         UserResponseDto saved = userService.save(userRequestDto);
         return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> findById(
+            @PathVariable Long id
+    ) {
         UserResponseDto found = userService.findById(id);
         return ResponseEntity.ok(found);
     }
@@ -37,13 +42,18 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> update(
+            @PathVariable Long id,
+            @RequestBody @Valid UserRequestDto userRequestDto
+    ) {
         UserResponseDto updated = userService.update(id, userRequestDto);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(
+            @PathVariable Long id
+    ) {
         userService.delete(id);
         return ResponseEntity.ok().build();
     }

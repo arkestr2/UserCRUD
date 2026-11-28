@@ -2,7 +2,6 @@ package com.example.usercrud.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.apache.commons.validator.routines.EmailValidator;
 
 import java.time.Instant;
 
@@ -44,9 +43,6 @@ public class User {
     }
 
     public void setName(String name) {
-        if (name == null || name.isBlank() || name.length() > 254) {
-            throw new IllegalArgumentException("Некорректная длина или пустой name");
-        }
         this.name = name;
     }
 
@@ -55,12 +51,6 @@ public class User {
     }
 
     public void setEmail(String email) {
-        if (email == null || email.isBlank() || email.length() > 254) {
-            throw new IllegalArgumentException("Некорректная длина или пустой email");
-        }
-        if (!EmailValidator.getInstance().isValid(email)) {
-            throw new IllegalArgumentException("Невалидный email");
-        }
         this.email = email;
     }
 
@@ -69,9 +59,6 @@ public class User {
     }
 
     public void setAge(int age) {
-        if (age < 18 || age > 150) {
-            throw new IllegalArgumentException("Невалидный возраст");
-        }
         this.age = age;
     }
 
