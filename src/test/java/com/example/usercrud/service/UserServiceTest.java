@@ -1,5 +1,6 @@
 package com.example.usercrud.service;
 
+import com.example.usercrud.dto.UserListResponseDto;
 import com.example.usercrud.dto.UserRequestDto;
 import com.example.usercrud.dto.UserResponseDto;
 import com.example.usercrud.exception.UserNotFoundException;
@@ -67,10 +68,10 @@ class UserServiceTest {
         User mockUser = mock(User.class);
         when(userRepository.findAll()).thenReturn(List.of(mockUser));
 
-        List<UserResponseDto> users = userService.findAll();
+        UserListResponseDto users = userService.findAll();
 
-        assertFalse(users.isEmpty());
-        assertEquals(mockUser.getId(), users.getFirst().id());
+        assertFalse(users.data().isEmpty());
+        assertEquals(mockUser.getId(), users.data().getFirst().id());
     }
 
     @Test

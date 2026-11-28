@@ -1,5 +1,6 @@
 package com.example.usercrud.service;
 
+import com.example.usercrud.dto.UserListResponseDto;
 import com.example.usercrud.dto.UserRequestDto;
 import com.example.usercrud.dto.UserResponseDto;
 import com.example.usercrud.exception.UserNotFoundException;
@@ -48,10 +49,12 @@ public class UserService {
         return MappingUtil.toDto(found);
     }
 
-    public List<UserResponseDto> findAll() {
+    public UserListResponseDto findAll() {
         log.info("Searching all users");
 
-        return userRepository.findAll().stream().map(MappingUtil::toDto).toList();
+        return new UserListResponseDto(
+                userRepository.findAll().stream().map(MappingUtil::toDto).toList()
+        );
     }
 
     @Transactional

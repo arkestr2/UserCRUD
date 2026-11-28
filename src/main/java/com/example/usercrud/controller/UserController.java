@@ -1,5 +1,6 @@
 package com.example.usercrud.controller;
 
+import com.example.usercrud.dto.UserListResponseDto;
 import com.example.usercrud.dto.UserRequestDto;
 import com.example.usercrud.dto.UserResponseDto;
 import com.example.usercrud.service.UserService;
@@ -8,7 +9,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 public class UserController {
@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserResponseDto>> findAll() {
-        List<UserResponseDto> found = userService.findAll();
+    public ResponseEntity<UserListResponseDto> findAll() {
+        UserListResponseDto found = userService.findAll();
         return ResponseEntity.ok(found);
     }
 
